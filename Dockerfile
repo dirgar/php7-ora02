@@ -5,24 +5,20 @@
 #######################################
 FROM ubuntu:20.04
 
+FROM ubuntu:20.04
 MAINTAINER Fajar
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_18_5
 
-RUN apt-get install git-core
 ##Download instantclient
-RUN git clone https://github.com/dirgar/instantclient.git
+ADD https://github.com/dirgar/instantclient/archive/main.zip /opt/oracle/
 ## Updating apt repository
 RUN apt-get update
 
 RUN apt-get install -y cron git-core jq unzip vim \
-  libjpeg-dev libpng-dev libpq-dev libsqlite3-dev libwebp-dev libzip-dev curl && \
-  rm -rf /var/lib/apt/lists/* && \
-  docker-php-ext-configure zip --with-zip && \
-  docker-php-ext-configure gd --with-jpeg --with-webp && \
-  docker-php-ext-install exif gd mysqli opcache pdo_pgsql pdo_mysql zip
+  libjpeg-dev libpng-dev libpq-dev libsqlite3-dev libwebp-dev libzip-dev curl
 
 ## Installing PHP 7.4 (Apache2 é also installed)
 RUN apt-get install php7.4 php-pear php7.4-dev -y
@@ -34,10 +30,12 @@ RUN a2enmod rewrite
 RUN apt-get install --no-install-recommends -y \
         zip unzip
 
+RUN unzip /opt/oracle/main.zip -d /opt/oracle
+   
 ## Adding oci drivers
-ADD instantclient/ /opt/oracle/
-RUN unzip /opt/oracle/instantclient-basiclite-linux.zip -d /opt/oracle \
-    && unzip /opt/oracle/instantclient-sdk-linux.zip -d /opt/oracle \
+
+RUN unzip /opt/oracle/instantclient-main/instantclient-basiclite-linux.zip -d /opt/oracle \
+    && unzip /opt/oracle/instantclient-main/instantclient-sdk-linux.zip -d /opt/oracle \
     && ln -sfn /opt/oracle/instantclient_18_5/libclntsh.so.18.1 /opt/oracle/instantclient_18_5/libclntsh.so \
     && ln -sfn /opt/oracle/instantclient_18_5/libclntshcore.so.18.1 /opt/oracle/instantclient_18_5/libclntshcore.so \
     && ln -sfn /opt/oracle/instantclient_18_5/libocci.so.18.1 /opt/oracle/instantclient_18_5/libocci.so \
