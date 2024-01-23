@@ -31,7 +31,7 @@ RUN a2enmod rewrite
 RUN apt-get install --no-install-recommends -y \
         zip unzip
 
-RUN git clone https://github.com/dirgar/php7-ora02.git
+RUN git clone https://github.com/dirgar/instantclient.git
 
 ## Adding oci drivers
 ADD instantclient/ /opt/oracle/
