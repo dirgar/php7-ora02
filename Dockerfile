@@ -11,6 +11,9 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV LD_LIBRARY_PATH=/opt/oracle/instantclient_18_5
 
+RUN apt-get install git-core
+##Download instantclient
+RUN git clone https://github.com/dirgar/instantclient.git
 ## Updating apt repository
 RUN apt-get update
 
@@ -30,8 +33,6 @@ RUN a2enmod rewrite
 ## Installing zip tools
 RUN apt-get install --no-install-recommends -y \
         zip unzip
-
-RUN git clone https://github.com/dirgar/instantclient.git
 
 ## Adding oci drivers
 ADD instantclient/ /opt/oracle/
